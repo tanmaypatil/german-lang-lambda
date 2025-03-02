@@ -1,4 +1,4 @@
-name: Deploy Python Lambda
+name: Deploy Python Lambda for German language web site.
 
 on:
   push:

@@ -56,9 +56,31 @@ jobs:
             
       - name: Verify deployment
         run: |
+         echo "Waiting for Lambda deployment to complete..."
+  
+         # Initialize variables
+         MAX_ATTEMPTS=30
+         ATTEMPT=1
+         WAIT_TIME=10
+  
+         # Loop until deployment completes or max attempts reached
+         while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+          echo "Checking deployment status (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
           RESPONSE=$(aws lambda get-function --function-name ${{ secrets.LAMBDA_FUNCTION_NAME }} --query 'Configuration.LastUpdateStatus' --output text)
-          if [[ "$RESPONSE" != "Successful" ]]; then
-            echo "Deployment failed or still in progress: $RESPONSE"
+    
+          if [[ "$RESPONSE" == "Successful" ]]; then
+            echo "✅ Lambda function successfully updated"
+            exit 0
+          elif [[ "$RESPONSE" == "Failed" ]]; then
+            echo "❌ Deployment failed: $RESPONSE"
             exit 1
           fi
-          echo "Lambda function successfully updated"
+    
+          echo "Deployment status: $RESPONSE - waiting ${WAIT_TIME}s before next check..."
+          sleep $WAIT_TIME
+          ATTEMPT=$((ATTEMPT+1))
+         done
+  
+         echo "❌ Deployment timed out after $((MAX_ATTEMPTS * WAIT_TIME)) seconds"
+         echo "Last status: $RESPONSE"
+         exit 1

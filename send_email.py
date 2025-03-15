@@ -17,10 +17,10 @@ def send_email(event,context):
     
     try:
         response = ses_client.send_email(
-            Source='tanmay@germanwakad.click',
+            Source='tany.germanwakad@gmail.com',
             Destination={
                 'ToAddresses': ['tany.patil77@gmail.com'],
-                'CcAddresses': ['tany.germanwakad@gmail.com'],
+                'CcAddresses': ['arti.tpatil@gmail.com'],
                 'BccAddresses': []
             },
             Message={

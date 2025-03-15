@@ -8,6 +8,7 @@ def send_email(event,context):
     print(f"send_email region is : {region_name}")
     receiver = event.get('to')
     print(f"receiver is : {receiver}")
+    cc_email = event.get('cc')
     aws_access_key_id = os.environ.get('aws_access_key_id')
     aws_secret_access_key = os.environ.get('aws_secret_access_key') 
     ses_client = boto3.client('ses', 
@@ -20,7 +21,7 @@ def send_email(event,context):
             Source='tany.germanwakad@gmail.com',
             Destination={
                 'ToAddresses': ['tany.patil77@gmail.com'],
-                'CcAddresses': ['arti.tpatil@gmail.com'],
+                'CcAddresses': [cc_email],
                 'BccAddresses': []
             },
             Message={

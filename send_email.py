@@ -1,11 +1,17 @@
 import boto3
 from botocore.exceptions import ClientError
+import os 
+
 
 def send_email():
+    region_name = os.environ.get('region_name')
+    print(f"send_email region is : {region_name}")
+    aws_access_key_id = os.environ.get('aws_access_key_id')
+    aws_secret_access_key = os.environ.get('aws_secret_access_key') 
     ses_client = boto3.client('ses', 
-                             region_name='us-east-1',  # Use your region
-                             aws_access_key_id='YOUR_ACCESS_KEY',
-                             aws_secret_access_key='YOUR_SECRET_KEY')
+                             region_name=region_name,  # Use your region
+                             aws_access_key_id=aws_access_key_id,
+                             aws_secret_access_key=aws_secret_access_key)
     
     try:
         response = ses_client.send_email(

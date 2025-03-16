@@ -6,9 +6,23 @@ import os
 def send_email(event,context):
     region_name = os.environ.get('region_name')
     print(f"send_email region is : {region_name}")
-    receiver = event.get('to')
-    print(f"receiver is : {receiver}")
+    from_email = event.get('from')
+    print(f"receiver is : {from_email}")
+    to_email = event.get('to')
+    print(f"receiver is : {to_email}")
     cc_email = event.get('cc')
+    print(f"cc is : {cc_email}")
+    # Query type 
+    query_type = event.get('query_type')
+    print(f"query is : {query_type}")
+    # Detailed query 
+    query = event.get('query')
+    print(f"query is : {query}")
+    # create a subject 
+    subject = f"German classes - {query_type}"
+    # full html text
+    html_text = f'<html><body><h1>{query_type} - from {from_email} </h1><p>{query}</p></body></html>'
+    
     aws_access_key_id = os.environ.get('aws_access_key_id')
     aws_secret_access_key = os.environ.get('aws_secret_access_key') 
     ses_client = boto3.client('ses', 
@@ -18,24 +32,24 @@ def send_email(event,context):
     
     try:
         response = ses_client.send_email(
-            Source='tany.germanwakad@gmail.com',
+            Source=from_email,
             Destination={
-                'ToAddresses': ['tany.patil77@gmail.com'],
+                'ToAddresses': [to_email],
                 'CcAddresses': [cc_email],
                 'BccAddresses': []
             },
             Message={
                 'Subject': {
-                    'Data': 'german classes',
+                    'Data': subject,
                     'Charset': 'UTF-8'
                 },
                 'Body': {
                     'Text': {
-                        'Data': 'This is the first mail for german classes',
+                        'Data': query,
                         'Charset': 'UTF-8'
                     },
                     'Html': {
-                        'Data': '<html><body><h1>German classes </h1><p>This is the first mail for german classes</p></body></html>',
+                        'Data': html_text,
                         'Charset': 'UTF-8'
                     }
                 }

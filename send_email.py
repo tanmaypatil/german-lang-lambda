@@ -12,6 +12,12 @@ def send_email(event,context):
     print(f"receiver is : {to_email}")
     cc_email = event.get('cc')
     print(f"cc is : {cc_email}")
+    # cust first name
+    first_name = event.get('first_name')
+    # cust last name
+    sur_name = event.get('sur_name')
+    # cust email
+    cust_email = event.get('cust_email')
     # Query type 
     query_type = event.get('query_type')
     print(f"query is : {query_type}")
@@ -21,7 +27,7 @@ def send_email(event,context):
     # create a subject 
     subject = f"German classes - {query_type}"
     # full html text
-    html_text = f'<html><body><h1>{query_type} - from {from_email} </h1><p>{query}</p></body></html>'
+    html_text = f'<html><body><h1>{query_type} - from {cust_email} </h1><p>{query}</p></body></html>'
     
     aws_access_key_id = os.environ.get('aws_access_key_id')
     aws_secret_access_key = os.environ.get('aws_secret_access_key') 
